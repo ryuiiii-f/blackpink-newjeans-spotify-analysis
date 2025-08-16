@@ -9,8 +9,8 @@ print("🎵 MULTI-ARTIST SPOTIFY TOP TRACKS COLLECTOR")
 print("="*60)
 
 # 直接填入你的Spotify credentials
-SPOTIFY_CLIENT_ID = "17dcf2d694ff47f7aa958e7b10289462"
-SPOTIFY_CLIENT_SECRET = "a84d21864bc64143b1831ae44b5fb6b0"
+SPOTIFY_CLIENT_ID = "%%%%%"
+SPOTIFY_CLIENT_SECRET = "%%%%%%%"
 
 def init_spotify():
     """初始化Spotify API客户端"""
