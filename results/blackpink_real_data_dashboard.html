@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLACKPINK Real Data Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000000, #1a1a1a, #2d2d2d);
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, rgba(255, 20, 147, 0.1), rgba(255, 105, 180, 0.1));
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 40px;
+            border: 2px solid rgba(255, 20, 147, 0.3);
+            box-shadow: 0 8px 32px rgba(255, 20, 147, 0.2);
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #ff1493, #ff69b4, #ffb6c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            text-shadow: 0 0 30px rgba(255, 20, 147, 0.5);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            color: #ffb6c1;
+            opacity: 0.9;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255, 20, 147, 0.15), rgba(0, 0, 0, 0.8));
+            backdrop-filter: blur(10px);
+            border-radius: 18px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(255, 20, 147, 0.1);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 20, 147, 0.6);
+            box-shadow: 0 8px 30px rgba(255, 20, 147, 0.3);
+        }
+        
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff1493, #ff69b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+            text-shadow: 0 0 20px rgba(255, 20, 147, 0.5);
+        }
+        
+        .stat-label {
+            font-size: 0.95em;
+            color: #ffb6c1;
+            font-weight: 500;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-card {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(255, 20, 147, 0.05));
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 105, 180, 0.2);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .chart-card:hover {
+            border-color: rgba(255, 20, 147, 0.5);
+            box-shadow: 0 8px 35px rgba(255, 20, 147, 0.2);
+        }
+        
+        .chart-card h3 {
+            margin-bottom: 25px;
+            background: linear-gradient(45deg, #ff1493, #ff69b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .song-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .song-card {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.85), rgba(255, 20, 147, 0.1));
+            backdrop-filter: blur(10px);
+            border-radius: 18px;
+            padding: 25px;
+            border: 1px solid rgba(255, 105, 180, 0.25);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .song-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff1493, #ff69b4, #ffb6c1);
+        }
+        
+        .song-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 20, 147, 0.5);
+            box-shadow: 0 6px 25px rgba(255, 20, 147, 0.2);
+        }
+        
+        .song-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff1493, #ff69b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+        
+        .song-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            font-size: 0.9em;
+        }
+        
+        .info-item {
+            background: rgba(255, 20, 147, 0.1);
+            padding: 12px 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 105, 180, 0.2);
+            transition: all 0.2s ease;
+        }
+        
+        .info-item:hover {
+            background: rgba(255, 20, 147, 0.2);
+            border-color: rgba(255, 105, 180, 0.4);
+        }
+        
+        .info-item strong {
+            color: #ff69b4;
+            font-size: 1.1em;
+        }
+        
+        .data-source {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(255, 20, 147, 0.1));
+            border: 2px solid rgba(255, 105, 180, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .data-source h4 {
+            background: linear-gradient(45deg, #ff1493, #ff69b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+        }
+        
+        .data-source p {
+            color: #ffb6c1;
+            line-height: 1.6;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #ff69b4, #ffb6c1);
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .chart-card, .song-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🖤💗 BLACKPINK Real Data Analysis</h1>
+            <p>Based on your actual Spotify API data collection</p>
+        </div>
+
+        <!-- Key Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">87</div>
+                <div class="stat-label">Artist Popularity</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">54.9M</div>
+                <div class="stat-label">Monthly Listeners</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">73.3</div>
+                <div class="stat-label">Avg Track Popularity</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">157.6</div>
+                <div class="stat-label">Avg Performance Score</div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+            <!-- Track Popularity -->
+            <div class="chart-card">
+                <h3>🏆 Track Popularity (2020-2024)</h3>
+                <div class="chart-container">
+                    <canvas id="popularityChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Performance Timeline -->
+            <div class="chart-card">
+                <h3>📈 Performance Score Evolution</h3>
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Duration Analysis -->
+            <div class="chart-card">
+                <h3>⏱️ Song Duration Analysis</h3>
+                <div class="chart-container">
+                    <canvas id="durationChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Album Type Distribution -->
+            <div class="chart-card">
+                <h3>💿 Album Type Distribution</h3>
+                <div class="chart-container">
+                    <canvas id="albumChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Song Information -->
+        <div class="song-details">
+            <div class="song-card">
+                <div class="song-title">🎵 How You Like That (2020)</div>
+                <div class="song-info">
+                    <div class="info-item">
+                        <strong>73</strong><br>Popularity
+                    </div>
+                    <div class="info-item">
+                        <strong>3.02</strong><br>Minutes
+                    </div>
+                    <div class="info-item">
+                        <strong>157.2</strong><br>Performance Score
+                    </div>
+                    <div class="info-item">
+                        <strong>THE ALBUM</strong><br>Album
+                    </div>
+                </div>
+            </div>
+
+            <div class="song-card">
+                <div class="song-title">🎵 Pink Venom (2022)</div>
+                <div class="song-info">
+                    <div class="info-item">
+                        <strong>74</strong><br>Popularity
+                    </div>
+                    <div class="info-item">
+                        <strong>3.12</strong><br>Minutes
+                    </div>
+                    <div class="info-item">
+                        <strong>158.4</strong><br>Performance Score
+                    </div>
+                    <div class="info-item">
+                        <strong>BORN PINK</strong><br>Album
+                    </div>
+                </div>
+            </div>
+
+            <div class="song-card">
+                <div class="song-title">🎵 Jump (2024)</div>
+                <div class="song-info">
+                    <div class="info-item">
+                        <strong>73</strong><br>Popularity
+                    </div>
+                    <div class="info-item">
+                        <strong>2.75</strong><br>Minutes
+                    </div>
+                    <div class="info-item">
+                        <strong>157.2</strong><br>Performance Score
+                    </div>
+                    <div class="info-item">
+                        <strong>JUMP</strong><br>Single
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Source -->
+        <div class="data-source">
+            <h4>📊 Data Source</h4>
+            <p>Real data collected via Spotify Web API using your custom data collector<br>
+            Collection Date: Recent • Songs: 3 • Artist: BLACKPINK</p>
+        </div>
+    </div>
+
+    <script>
+        // Your actual data (converted from CSV)
+        const realData = {
+            tracks: [
+                {
+                    title: "How You Like That",
+                    release_year: 2020,
+                    track_popularity: 73,
+                    duration_minutes: 3.02,
+                    performance_score: 157.2,
+                    album_name: "THE ALBUM",
+                    album_type: "album"
+                },
+                {
+                    title: "Pink Venom",
+                    release_year: 2022,
+                    track_popularity: 74,
+                    duration_minutes: 3.12,
+                    performance_score: 158.4,
+                    album_name: "BORN PINK",
+                    album_type: "album"
+                },
+                {
+                    title: "Jump",
+                    release_year: 2024,
+                    track_popularity: 73,
+                    duration_minutes: 2.75,
+                    performance_score: 157.2,
+                    album_name: "JUMP",
+                    album_type: "single"
+                }
+            ],
+            artist: {
+                artist_popularity: 87,
+                monthly_listeners: 54900000
+            }
+        };
+
+        // BLACKPINK Pink Color Palette
+        const pinkColors = [
+            '#ff1493',  // Deep Pink
+            '#ff69b4',  // Hot Pink
+            '#ffb6c1',  // Light Pink
+            '#ff007f',  // Rose
+            '#ff6eb4'   // Pink variant
+        ];
+
+        const pinkGradients = [
+            'rgba(255, 20, 147, 0.8)',   // Deep Pink with transparency
+            'rgba(255, 105, 180, 0.8)',  // Hot Pink with transparency
+            'rgba(255, 182, 193, 0.8)',  // Light Pink with transparency
+            'rgba(255, 0, 127, 0.8)',    // Rose with transparency
+            'rgba(255, 110, 180, 0.8)'   // Pink variant with transparency
+        ];
+
+        // Chart defaults with BLACKPINK theme
+        Chart.defaults.color = '#ffb6c1';
+        Chart.defaults.borderColor = 'rgba(255, 105, 180, 0.1)';
+
+        // 1. Track Popularity Chart
+        const popularityCtx = document.getElementById('popularityChart').getContext('2d');
+        new Chart(popularityCtx, {
+            type: 'bar',
+            data: {
+                labels: realData.tracks.map(t => `${t.title}\n(${t.release_year})`),
+                datasets: [{
+                    label: 'Track Popularity',
+                    data: realData.tracks.map(t => t.track_popularity),
+                    backgroundColor: pinkGradients.slice(0, 3),
+                    borderColor: pinkColors.slice(0, 3),
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: { color: 'rgba(255, 105, 180, 0.1)' },
+                        title: { display: true, text: 'Popularity Score', color: '#ffb6c1' },
+                        ticks: { color: '#ffb6c1' }
+                    },
+                    x: {
+                        grid: { color: 'rgba(255, 105, 180, 0.1)' },
+                        ticks: { color: '#ffb6c1' }
+                    }
+                }
+            }
+        });
+
+        // 2. Performance Score Timeline
+        const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+        new Chart(performanceCtx, {
+            type: 'line',
+            data: {
+                labels: realData.tracks.map(t => t.release_year),
+                datasets: [{
+                    label: 'Performance Score',
+                    data: realData.tracks.map(t => t.performance_score),
+                    borderColor: '#ff1493',
+                    backgroundColor: 'rgba(255, 20, 147, 0.1)',
+                    borderWidth: 4,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#ff1493',
+                    pointBorderColor: '#ffb6c1',
+                    pointBorderWidth: 3,
+                    pointRadius: 8,
+                    pointHoverRadius: 12
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 155,
+                        max: 160,
+                        grid: { color: 'rgba(255, 105, 180, 0.1)' },
+                        title: { display: true, text: 'Performance Score', color: '#ffb6c1' },
+                        ticks: { color: '#ffb6c1' }
+                    },
+                    x: {
+                        grid: { color: 'rgba(255, 105, 180, 0.1)' },
+                        title: { display: true, text: 'Year', color: '#ffb6c1' },
+                        ticks: { color: '#ffb6c1' }
+                    }
+                }
+            }
+        });
+
+        // 3. Duration Analysis
+        const durationCtx = document.getElementById('durationChart').getContext('2d');
+        new Chart(durationCtx, {
+            type: 'doughnut',
+            data: {
+                labels: realData.tracks.map(t => t.title),
+                datasets: [{
+                    data: realData.tracks.map(t => t.duration_minutes),
+                    backgroundColor: pinkGradients.slice(0, 3),
+                    borderColor: pinkColors.slice(0, 3),
+                    borderWidth: 3,
+                    hoverBorderWidth: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { 
+                            color: '#ffb6c1', 
+                            padding: 20,
+                            font: { size: 12 }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.label}: ${context.parsed} minutes`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 4. Album Type Distribution
+        const albumCtx = document.getElementById('albumChart').getContext('2d');
+        const albumTypes = realData.tracks.reduce((acc, track) => {
+            acc[track.album_type] = (acc[track.album_type] || 0) + 1;
+            return acc;
+        }, {});
+
+        new Chart(albumCtx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(albumTypes).map(type => type.charAt(0).toUpperCase() + type.slice(1)),
+                datasets: [{
+                    data: Object.values(albumTypes),
+                    backgroundColor: ['#ff1493', '#ff69b4'],
+                    borderColor: ['#ffb6c1', '#ffb6c1'],
+                    borderWidth: 3,
+                    hoverBorderWidth: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { 
+                            color: '#ffb6c1', 
+                            padding: 20,
+                            font: { size: 12 }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                return `${context.label}: ${context.parsed} songs (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Add smooth loading animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.chart-card, .stat-card, .song-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
