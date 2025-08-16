@@ -43,7 +43,7 @@ NewJeans' shorter song format (2.97 min avg) is perfectly optimized for streamin
 
 ## 🎮 Live Dashboard
 
-Check out the [interactive dashboard](https://github.com/ryuiiii-f/blackpink-newjeans-spotify-analysis/blob/main/results/nj_vs_bp_dashboard.html) with detailed charts and analysis!
+Check out the [interactive dashboard](https://ryuiiii-f.github.io/blackpink-newjeans-spotify-analysis/results/nj_vs_bp_dashboard.html) with detailed charts and analysis!
 
 ## 📈 Data Sources
 
