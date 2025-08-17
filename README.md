@@ -9,6 +9,10 @@ A data-driven comparison of BlackPink and NewJeans using Spotify API to see who 
 - **BLACKPINK**: 68.2 average popularity (0 super hits)
 - **Advantage**: +9.4 points (+13.8%) for NewJeans
 
+## Live Dashboard
+
+Check out the [interactive dashboard](https://ryuiiii-f.github.io/blackpink-newjeans-spotify-analysis/results/nj_vs_bp_dashboard.html) with detailed cha
+
 ## Quick Stats
 
 | Metric | BLACKPINK | NewJeans | Winner |
@@ -40,10 +44,6 @@ NewJeans' shorter song format (2.97 min avg) is perfectly optimized for streamin
 - `advanced_spotify_analysis.py` - Main analysis script
 - `nj_vs_bp_dashboard.html` - Interactive dashboard
 - Various CSV data files with track information
-
-## Live Dashboard
-
-Check out the [interactive dashboard](https://ryuiiii-f.github.io/blackpink-newjeans-spotify-analysis/results/nj_vs_bp_dashboard.html) with detailed charts and analysis!
 
 ## Data Sources
 
