@@ -11,7 +11,7 @@ A data-driven comparison of BlackPink and NewJeans using Spotify API to see who 
 
 ## Live Dashboard
 
-Check out the [interactive dashboard](https://ryuiiii-f.github.io/blackpink-newjeans-spotify-analysis/results/nj_vs_bp_dashboard.html) with detailed cha
+Check out the [interactive dashboard](https://ryuiiii-f.github.io/blackpink-newjeans-spotify-analysis/results/nj_vs_bp_dashboard.html) with detailed charts and analysis!
 
 ## Quick Stats
 
