@@ -30,7 +30,7 @@ NewJeans' shorter song format (2.97 min avg) is perfectly optimized for streamin
 
 | Component | Technologies |
 |-----------|-------------|
-| **Data Collection** | Spotify Web API, Spotipy |
+| **Data Collection** | Spotify Web API, Spotify |
 | **Data Processing** | Pandas, NumPy |
 | **Machine Learning** | Scikit-learn (KMeans, PCA, t-SNE, Random Forest) |
 | **Statistical Analysis** | StandardScaler, Train-Test Split |
